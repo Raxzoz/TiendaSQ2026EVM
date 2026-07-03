@@ -1,12 +1,12 @@
-#Etapa 1: compilacion
-FROM Maven:3.8.5-openjdk-17 as build
-workdir /app
+# Etapa 1: compilacion
+FROM maven:3.8.5-openjdk-17 AS build
+WORKDIR /app
 COPY . .
 RUN mvn -f pom.xml clean package -DskipTests
 
-#Etapa 2: Creacion de la imagen final
+# Etapa 2: Creacion de la imagen final
 FROM openjdk:17.0.1-jdk-slim
 WORKDIR /app
-COPY --from=build /app/target/*.jar ./app.jar
-expose 80
+COPY --from=build /app/target/*.jar /app.jar
+EXPOSE 80
 ENTRYPOINT ["java","-jar","app.jar"]
