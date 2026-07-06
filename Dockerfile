@@ -1,13 +1,31 @@
-# Etapa 1: compilacion
-FROM maven:3.8.5-openjdk-17 AS build
+# Etapa 1: Compilación (Build)
+# Usamos una imagen de Maven con JDK 21 para compilar
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 WORKDIR /app
-COPY . .
-RUN mvn -f pom.xml clean package -DskipTests
 
-# Etapa 2: Creacion de la imagen final
-FROM openjdk:17.0.1-jdk-slim
+# Copiamos solo el pom.xml primero para aprovechar la caché de capas de Docker
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copiamos el código fuente y compilamos
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# Etapa 2: Imagen de Ejecución (Runtime)
+# Usamos JRE en lugar de JDK para reducir el tamaño y mejorar la seguridad
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-# Cambiamos el *.jar por app.jar directamente:
-COPY --from=build /app/target/app.jar ./app.jar
+
+# Creamos un usuario de sistema para no ejecutar la app como root (Seguridad)
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+
+# Copiamos el JAR desde la etapa de compilación
+# El nombre 'app.jar' es un estándar para facilitar el despliegue
+COPY --from=build /app/target/app.jar app.jar
+
+# Exponemos el puerto definido en tu application.properties (80)
 EXPOSE 80
-ENTRYPOINT ["java","-jar","app.jar"]
+
+# Parámetros de optimización de memoria para contenedores
+ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
