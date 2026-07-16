@@ -32,6 +32,7 @@ public class ProjectConfig implements WebMvcConfigurer {
 
     /* El siguiente método se utilizar para publicar en la nube, independientemente  */
 
+    
     @Bean
     public SpringResourceTemplateResolver templateResolver_0() {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
