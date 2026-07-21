@@ -61,12 +61,16 @@
                     <artifactId>spring-boot-starter-webmvc-test</artifactId>
                     <scope>test</scope>
                 </dependency>
-                
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                    <scope>test</scope>
+                </dependency>
                 
                 <dependency>
                     <groupId>org.webjars</groupId>
                     <artifactId>bootstrap</artifactId>
-                    <version>5.3.7</version>
+                    <version>5.3.3</version>
                 </dependency>
                 <dependency>
                     <groupId>org.webjars</groupId>
@@ -85,8 +89,7 @@
                 </dependency>
                 <dependency>
                     <groupId>org.webjars</groupId>
-                    <artifactId>webjars-locator</artifactId>
-                    <version>0.52</version>
+                    <artifactId>webjars-locator-core</artifactId>
                 </dependency>
                 
                 <dependency>    
@@ -109,7 +112,8 @@
                     <artifactId>firebase-admin</artifactId>
                     <version>9.7.0</version>
                 </dependency>
-                    
+                
+                
         </dependencies>
 
 	<build>
